@@ -118,3 +118,135 @@ Likely interviewer follow-ups
 Early exit optimization: if s.length is odd, return false immediately. Why does this work?
 Space optimization: if only one bracket type existed, you could replace the stack with a single counter. Why does that break with multiple types?
 Extension: how would you return the index of the first offending bracket instead of a boolean?
+
+**Syntax explanation**
+
+The core idea in plain steps
+
+Here is the logic, with no language-specific syntax:
+
+Make an empty stack.
+For each character:
+If it’s an opener, push it.
+If it’s a closer, pop the stack and check that the popped item is the matching opener. If not, return false.
+At the end, return true only if the stack is empty.
+TypeScript, piece by piece
+typescript
+function isValid(s: string): boolean {
+
+s: string means the parameter s must be a string. The : boolean after the parentheses is the return type.
+
+typescript
+const closeToOpen: Record<string, string> = {
+  ")": "(",
+  "]": "[",
+  "}": "{",
+};
+
+This is a lookup table (like a dictionary). Record<string, string> is a type meaning “an object whose keys are strings and whose values are strings.” Given a closer, it tells you which opener it needs: closeToOpen[")"] gives "(".
+
+typescript
+const stack: string[] = [];
+
+An empty array, typed as “array of strings.” We use it as a stack: push adds to the end and pop removes from the end.
+
+typescript
+for (const ch of s) {
+
+Loops over the string one character at a time. ch is the current character. (for...of gives you the values. Its cousin for...in gives you indexes or keys, so don’t mix them up.)
+
+typescript
+if (ch in closeToOpen) {
+
+The in operator checks whether ch is a key in the object. So this reads as “is this character one of ), ], }?” If it is, it’s a closer.
+
+typescript
+if (stack.pop() !== closeToOpen[ch]) return false;
+
+This line does a lot:
+
+stack.pop() removes and returns the last item. If the stack is empty, it returns undefined instead of crashing.
+closeToOpen[ch] looks up the opener this closer needs.
+!== means “not equal.”
+If the two differ, return false. This covers both a wrong match like (] and an empty stack like ), because undefined never equals a bracket.
+typescript
+} else {
+  stack.push(ch);
+}
+
+If it wasn’t a closer, it must be an opener, so push it. (The constraints guarantee only brackets appear.)
+
+typescript
+return stack.length === 0;
+
+After the loop, any leftover items are unclosed openers. === is strict equality, and the expression evaluates directly to true or false.
+
+Rust, piece by piece
+rust
+pub fn is_valid(s: &str) -> bool {
+pub makes the function visible outside the module.
+&str is a borrowed string slice, meaning “I’m looking at a string but don’t own it.” This is the usual type for string parameters.
+-> bool is the return type.
+rust
+let mut stack: Vec<char> = Vec::new();
+Vec<char> is a growable array of characters.
+mut is required because Rust variables are immutable by default. Without mut, push and pop won’t compile.
+rust
+for ch in s.chars() {
+
+.chars() turns the string into an iterator over its characters, and ch is each one in turn.
+
+rust
+match ch {
+    '(' | '[' | '{' => stack.push(ch),
+    ')' | ']' | '}' => { ... }
+    _ => {}
+}
+
+match is like a more powerful switch:
+
+Each line is pattern => what to do.
+| means “or”, so '(' | '[' | '{' matches any of those three.
+_ is the wildcard that matches everything else. {} is an empty block, meaning “do nothing.”
+Single quotes ('(') are a single char. Double quotes are strings.
+rust
+let expected = match ch {
+    ')' => '(',
+    ']' => '[',
+    _ => '{',
+};
+
+In Rust, match is an expression: it produces a value, so you can assign it to a variable. This is the lookup table, written as a match. The final _ arm covers }, since we already know ch is one of the three closers.
+
+rust
+if stack.pop() != Some(expected) {
+    return false;
+}
+
+This is the part that confuses most people. In Rust, pop() returns an Option<char>, which is either:
+
+Some(c) when there was an item, or
+None when the stack was empty.
+
+So we can’t compare pop() to a plain char. We wrap our expected value as Some(expected) and compare like with like. If the stack was empty, we get None != Some(...), which is true, so we return false. This is the Rust equivalent of the undefined trick in TypeScript.
+
+rust
+stack.is_empty()
+
+There is no semicolon and no return. In Rust, the last expression in a function is its return value. Adding a semicolon would turn it into a statement that returns nothing, which causes a compile error.
+
+Trace: "([)]" (should be false)
+Step	ch	Action	Stack after
+1	(	opener, push	[ ( ]
+2	[	opener, push	[ (, [ ]
+3	)	closer, pop gives [, but ) needs (. Mismatch, return false	
+
+The brackets are balanced in count, but the order is wrong, and the stack catches that.
+
+Quick syntax comparison
+Concept	TypeScript	Rust
+Mutable variable	let (const for fixed)	let mut (let is fixed)
+“Maybe a value”	T | undefined	Option<T>
+Pop from empty stack	undefined	None
+Implicit return	no, needs return	yes, last expression with no ;
+Character loop	for (const ch of s)	for ch in s.chars()
