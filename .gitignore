@@ -48,3 +48,7 @@ Desktop.ini
 tmp/
 temp/
 *.tmp
+
+# agents
+agent-instructions.md
+**/agent-instructions.md
