@@ -88,12 +88,13 @@ pub fn two_sum(nums: Vec<i32>, target: i32) -> Vec<i32> {
 
 Same idea in both: remember values you've seen and look up the complement in O(1). The differences worth noticing: TypeScript signals "not found" with `undefined`, while Rust uses `Option` (`Some` / `None`); and Rust needs the `as i32` cast to turn a `usize` index into the `Vec<i32>` return type.
 
-For the full step-by-step syntax breakdown of this and every other problem, open [its document](../problems/easy-qwen-two_sum.md) — each one explains the TypeScript and Rust line by line.
+For the full step-by-step syntax breakdown of this and every other problem, open [its document](../problems/easy/two_sum.md) — each one explains the TypeScript and Rust line by line.
 
 **Language references:**
 
 - TypeScript — [TypeScript Handbook](https://www.typescriptlang.org/docs/handbook/intro.html) and the [MDN JavaScript reference](https://developer.mozilla.org/en-US/docs/Web/JavaScript).
 - Rust — [The Rust Programming Language ("The Book")](https://doc.rust-lang.org/book/), [Rust by Example](https://doc.rust-lang.org/rust-by-example/), the [standard library docs](https://doc.rust-lang.org/std/), and the [Rustlings exercises](https://github.com/rust-lang/rustlings).
+- PHP (lower priority) — [PHP Manual](https://www.php.net/manual/).
 
 ## 7. Practice deliberately, not just more
 

@@ -6,7 +6,7 @@ A collection of coding exercises for ongoing programming practice and software e
 
 This repository serves as a staging area for practicing coding exercises, primarily generated with the assistance of LLMs.
 
-The main practice languages are **TypeScript** and **Rust**, with **PHP** as a possible future addition.
+The main practice languages are **TypeScript** and **Rust**. **PHP** is also included as a lower-priority third language.
 
 Exercises are organized by difficulty:
 
@@ -25,6 +25,10 @@ The goal is to attempt each exercise independently, test the implementation, rev
 │   │   ├── easy/
 │   │   ├── medium/
 │   │   └── hard/
+│   ├── php/
+│   │   ├── easy/
+│   │   ├── medium/
+│   │   └── hard/
 │   └── rust/
 │       ├── Cargo.toml          # worksheet workspace manifest
 │       ├── Cargo.lock
@@ -33,6 +37,10 @@ The goal is to attempt each exercise independently, test the implementation, rev
 │       └── hard/
 ├── solutions/                  # reference solutions (fully implemented, tested)
 │   ├── typescript/
+│   │   ├── easy/
+│   │   ├── medium/
+│   │   └── hard/
+│   ├── php/
 │   │   ├── easy/
 │   │   ├── medium/
 │   │   └── hard/
@@ -235,6 +243,25 @@ cargo metadata --manifest-path solutions/rust/Cargo.toml --no-deps
 
 Replace `valid-brackets` with the relevant package name when working on a different exercise.
 
+## PHP
+
+PHP is a lower-priority third language. Worksheets live in `exercises/php/` and reference solutions in `solutions/php/`, organized by difficulty as standalone `.php` scripts (no package manifest).
+
+Run a PHP worksheet or solution with the `php` CLI:
+
+```powershell
+php exercises/php/easy/two_sum.php
+php solutions/php/easy/two_sum.php
+```
+
+Syntax-check a file with:
+
+```powershell
+php -l solutions/php/easy/two_sum.php
+```
+
+PHP is included for completeness but is not the focus of the problem documents, which cover TypeScript and Rust.
+
 ## Working with Exercises
 
 A typical practice session follows this workflow:
@@ -252,6 +279,7 @@ A typical practice session follows this workflow:
 - Use descriptive, consistent names across languages (snake_case for docs and TypeScript files, kebab-case for Rust packages).
 - Prefer one self-contained TypeScript file per exercise.
 - Use one Cargo package per Rust exercise.
+- PHP exercises are standalone `.php` scripts (no package manifest).
 - Keep `exercises/` (worksheets) and `solutions/` (reference) in sync: same names, same signatures.
 - Run commands from the repository root.
 - Keep `package.json`, lockfiles, Cargo manifests, and other project configuration files under version control.
@@ -259,4 +287,4 @@ A typical practice session follows this workflow:
 
 ## Future Expansion
 
-PHP or other languages may be added in the future using a similar language-and-difficulty organization.
+Other languages may be added in the future using a similar language-and-difficulty organization.
